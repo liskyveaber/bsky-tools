@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Небосвинська пісочниця</title>
+</head>
+
+<body>
+    <nav>
+        <a href="#" onclick="loadUnfollowersPage()">Unfollowers</a>
+    </nav>
+
+    <div id="content-container"></div>
+
+    <script>
+        function loadUnfollowersPage() {
+            fetch('https://liskyveaber.github.io/bsky-tools-unfollowers.html', { method: 'GET' })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('content-container').innerHTML = html;
+                })
+                .catch(error => console.error('Error loading content:', error));
+        }
+    </script>
+</body>
+
+</html>
