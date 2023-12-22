@@ -118,19 +118,13 @@
                 const reloadTime = new Date(reloadTimestamp);
                 const now = new Date();
                 const timeDifference = now - reloadTime;
-                console.log(timeDifference);
-                // const isGreaterThan24Hours = timeDifference > 24 * 60 * 60 * 1000;
-                const isGreaterThan24Hours = timeDifference > 10 * 1000;
+                const isGreaterThan24Hours = timeDifference > 24 * 60 * 60 * 1000;
 
                 if (isGreaterThan24Hours) {
-                    console.log('1');
                     localStorage.setItem('reloadTime', now.getTime());
                     location.reload(true);
                 }
-
-                console.log('2');
             } else {
-                console.log('3');
                 localStorage.setItem('reloadTime', new Date().getTime());
             }
         });
@@ -155,7 +149,7 @@
                         document.getElementById('appPassword').value = localStorage.getItem('appPassword');
                     }
                 })
-                .catch(error => console.error('Error loading content:', error));
+                .catch(error => console.error('Error while loading content:', error));
         }
     </script>
 </body>
