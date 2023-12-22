@@ -7,85 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="64x64"
         href="https://liskyveaber.github.io/bsky-tools-unfollowers/icon/favicon.png">
-    <style>
-        body,
-        html {
-            background-color: black;
-            color: white;
-        }
-
-        footer {
-            border: 1px solid white;
-            border-radius: 20px;
-            display: block;
-            margin: 24px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        footer>a {
-            color: white;
-        }
-
-        footer>a:hover {
-            color: rgb(0, 133, 255);
-        }
-
-        #content-container {
-            display: block;
-            padding-bottom: 24px;
-            padding-left: 24px;
-            padding-right: 24px;
-        }
-
-        #grid-container {
-            padding: 24px;
-        }
-
-        #home-link {
-            border: 1px solid white;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-            display: block;
-            font-size: 34px;
-            font-weight: 500;
-            letter-spacing: 0.25px;
-            padding-bottom: 24px;
-            padding-top: 24px;
-            text-decoration: none;
-            width: 100%;
-        }
-
-        #home-link:hover {
-            background-color: rgb(38, 39, 45);
-        }
-
-        .card {
-            border: 1px solid white;
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            flex-flow: wrap;
-            padding-bottom: 16px;
-            padding-left: 36px;
-            padding-right: 36px;
-            padding-top: 16px;
-            min-height: 120px;
-            text-wrap: pretty;
-            width: 30%;
-        }
-
-        .card:hover {
-            background-color: rgb(38, 39, 45);
-            cursor: pointer;
-        }
-
-        .nav-container {
-            padding: 24px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/styles.css">
 </head>
 
 <body>
@@ -110,58 +32,8 @@
         Версія 2.0.0
     </footer>
 
+    <script src="https://liskyveaber.github.io/bsky-tools/script.js"></script>
     <script src="https://liskyveaber.github.io/bsky-tools-unfollowers/script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            if (localStorage.getItem('reloadTime')) {
-                const reloadTimestamp = localStorage.getItem('reloadTime');
-                const reloadTime = new Date(reloadTimestamp);
-                const now = new Date();
-                const timeDifference = now - reloadTime;
-                const isGreaterThan24Hours = timeDifference > 24 * 60 * 60 * 1000;
-
-                if (isGreaterThan24Hours) {
-                    localStorage.setItem('reloadTime', now.getTime());
-                    location.reload(true);
-                }
-            } else {
-                localStorage.setItem('reloadTime', new Date().getTime());
-            }
-        });
-
-        function loadUnfollowersPage() {
-            const timestamp = new Date().getTime();
-
-            fetch('https://liskyveaber.github.io/bsky-tools-unfollowers/' + '?timestamp=' + timestamp, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'text/html'
-                }
-            })
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('grid-container').style.display = 'none';
-                    document.getElementById('content-container').innerHTML = html;
-
-                    if (localStorage.getItem('handle') && document.getElementById('handle')) {
-                        document.getElementById('handle').value = localStorage.getItem('handle');
-                    }
-
-                    if (localStorage.getItem('appPassword') && document.getElementById('appPassword')) {
-                        document.getElementById('appPassword').value = localStorage.getItem('appPassword');
-                    }
-                })
-                .catch(error => console.error('Error while loading content:', error));
-        }
-
-        function navigateToHome() {
-            var homeUrl = 'https://liskyveaber.github.io/bsky-tools';
-            var timestamp = new Date().getTime();
-            var urlWithTimestamp = homeUrl + '?timestamp=' + timestamp;
-
-            window.location.href = urlWithTimestamp;
-        }
-    </script>
 </body>
 
 </html>

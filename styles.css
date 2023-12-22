@@ -1,0 +1,77 @@
+body,
+html {
+    background-color: black;
+    color: white;
+}
+
+footer {
+    border: 1px solid white;
+    border-radius: 20px;
+    display: block;
+    margin: 24px;
+    padding: 16px;
+    text-align: center;
+}
+
+footer>a {
+    color: white;
+}
+
+footer>a:hover {
+    color: rgb(0, 133, 255);
+}
+
+#content-container {
+    display: block;
+    padding-bottom: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+#grid-container {
+    padding: 24px;
+}
+
+#home-link {
+    border: 1px solid white;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    display: block;
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+    padding-bottom: 24px;
+    padding-top: 24px;
+    text-decoration: none;
+    width: 100%;
+}
+
+#home-link:hover {
+    background-color: rgb(38, 39, 45);
+}
+
+.card {
+    border: 1px solid white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-flow: wrap;
+    padding-bottom: 16px;
+    padding-left: 36px;
+    padding-right: 36px;
+    padding-top: 16px;
+    min-height: 120px;
+    text-wrap: pretty;
+    width: 30%;
+}
+
+.card:hover {
+    background-color: rgb(38, 39, 45);
+    cursor: pointer;
+}
+
+.nav-container {
+    padding: 24px;
+    text-align: center;
+}
