@@ -8,13 +8,13 @@
     <link rel="icon" type="image/png" sizes="64x64"
         href="https://liskyveaber.github.io/bsky-tools-unfollowers/icon/favicon.png">
     <style>
-        body {
+        body,
+        html {
             background-color: black;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: white;
         }
 
         footer {
-            color: white;
             border: 1px solid white;
             border-radius: 20px;
             display: block;
@@ -64,14 +64,14 @@
         .card {
             border: 1px solid white;
             border-radius: 20px;
-            color: white;
             display: flex;
             flex-direction: column;
+            flex-flow: wrap;
             padding-bottom: 16px;
             padding-left: 36px;
             padding-right: 36px;
             padding-top: 16px;
-            min-height: 150px;
+            min-height: 120px;
             text-wrap: pretty;
             width: 30%;
         }
@@ -91,7 +91,7 @@
 <body>
     <nav>
         <div class="nav-container">
-            <a id="home-link" href="https://liskyveaber.github.io/bsky-tools">Небосвинська пісочниця</a>
+            <a id="home-link" href="#" onclick="navigateToHome()">Небосвинська пісочниця</a>
         </div>
     </nav>
 
@@ -130,7 +130,9 @@
         });
 
         function loadUnfollowersPage() {
-            fetch('https://liskyveaber.github.io/bsky-tools-unfollowers/', {
+            const timestamp = new Date().getTime();
+
+            fetch('https://liskyveaber.github.io/bsky-tools-unfollowers/' + '?timestamp=' + timestamp, {
                 method: 'GET',
                 headers: {
                     'Accept': 'text/html'
@@ -150,6 +152,14 @@
                     }
                 })
                 .catch(error => console.error('Error while loading content:', error));
+        }
+
+        function navigateToHome() {
+            var homeUrl = 'https://liskyveaber.github.io/bsky-tools';
+            var timestamp = new Date().getTime();
+            var urlWithTimestamp = homeUrl + '?timestamp=' + timestamp;
+
+            window.location.href = urlWithTimestamp;
         }
     </script>
 </body>
