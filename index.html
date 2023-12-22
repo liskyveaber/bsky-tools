@@ -112,9 +112,29 @@
 
     <script src="https://liskyveaber.github.io/bsky-tools-unfollowers/script.js"></script>
     <script>
-        function loadUnfollowersPage() {
-            document.getElementById('grid-container').style.display = 'none';
+        document.addEventListener('DOMContentLoaded', function () {
+            if (localStorage.getItem('reloadTime')) {
+                const reloadTimestamp = localStorage.getItem('reloadTime');
+                const reloadTime = new Date(reloadTimestamp);
+                const now = new Date();
+                const timeDifference = now - reloadTime;
+                // const isGreaterThan24Hours = timeDifference > 24 * 60 * 60 * 1000;
+                const isGreaterThan24Hours = timeDifference > 10 * 1000;
 
+                if (isGreaterThan24Hours) {
+                    console.log('1');
+                    localStorage.setItem('reloadTime', now.getTime());
+                    location.reload(true);
+                }
+
+                console.log('2');
+            } else {
+                console.log('2');
+                localStorage.setItem('reloadTime', new Date().getTime());
+            }
+        });
+
+        function loadUnfollowersPage() {
             fetch('https://liskyveaber.github.io/bsky-tools-unfollowers/', {
                 method: 'GET',
                 headers: {
@@ -123,6 +143,7 @@
             })
                 .then(response => response.text())
                 .then(html => {
+                    document.getElementById('grid-container').style.display = 'none';
                     document.getElementById('content-container').innerHTML = html;
 
                     if (localStorage.getItem('handle') && document.getElementById('handle')) {
