@@ -124,6 +124,14 @@
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('content-container').innerHTML = html;
+
+                    if (localStorage.getItem('handle') && document.getElementById('handle')) {
+                        document.getElementById('handle').value = localStorage.getItem('handle');
+                    }
+
+                    if (localStorage.getItem('appPassword') && document.getElementById('appPassword')) {
+                        document.getElementById('appPassword').value = localStorage.getItem('appPassword');
+                    }
                 })
                 .catch(error => console.error('Error loading content:', error));
         }
