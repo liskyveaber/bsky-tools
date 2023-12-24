@@ -81,7 +81,7 @@ async function loadAllUsers(url, did, token) {
     params.append('actor', did);
     params.append('limit', 100);
 
-    const response = await loadUsers(url, params, token);
+    var response = await loadUsers(url, params, token);
 
     if (url.includes('getFollowers')) {
         if (response && response.followers) {
