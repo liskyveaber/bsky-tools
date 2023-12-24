@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="64x64" href="https://liskyveaber.github.io/bsky-tools/icon/favicon.png">
-    <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/styles.css">
+    <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/index.css">
 </head>
 
 <body contenteditable="false">
@@ -16,6 +16,27 @@
             <a id="home-link" href="#" onclick="navigateToHome()">Небосвинська пісочниця</a>
         </div>
     </nav>
+
+    <form id="credentialsForm">
+        <p>
+            Спроба автоматично започаткувати сесію зазнала невдачі
+            <br>
+            Будь ласка, започаткуйте нову сесію
+        </p>
+        <div>
+            <label for="handle">Нікнейм:</label>
+            <input type="text" id="handle" name="handle" placeholder="все що після @" required>
+        </div>
+        <div>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" placeholder="Settings > App Passwords" required>
+        </div>
+        <div id="initialize-block">
+            <button type="button" id="initializeButton" onclick="initializeSessionManually()">Започаткувати
+                сесію</button>
+        </div>
+        <div id="session-information-block"></div>
+    </form>
 
     <div id="grid-container">
         <div class="card" onclick="loadUnfollowersPage()">
@@ -29,14 +50,14 @@
         Розроблено <a href="https://bsky.app/profile/liskyveaber.bsky.social"
             target="_blank">@liskyveaber.bsky.social</a>. Всі права не захищено
         <br>
-        Версія 2.0.3
+        Версія 2.1.3
     </footer>
 
     <div id="app-spinner-overlay">
         <div class="app-spinner"></div>
     </div>
 
-    <script src="https://liskyveaber.github.io/bsky-tools/script.js"></script>
+    <script src="https://liskyveaber.github.io/bsky-tools/index.js"></script>
     <script src="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.js"></script>
 </body>
 

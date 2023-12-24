@@ -6,13 +6,9 @@
     <title>Знайти невзаємні підписки</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon"
-          type="image/png"
-          sizes="64x64"
-          href="https://liskyveaber.github.io/bsky-tools/icon/favicon.png">
-    <link rel="stylesheet"
-          type="text/css"
-          href="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.css">
+    <link rel="icon" type="image/png" sizes="64x64" href="https://liskyveaber.github.io/bsky-tools/icon/favicon.png">
+    <link rel="stylesheet" type="text/css"
+        href="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.css">
 </head>
 
 <body contenteditable="false">
@@ -28,22 +24,6 @@
         <li>Користувачів які читають вас, але були заблоковані, не враховано</li>
         <li>Користувачів яких читаєте ви, але які заблокували вас, не враховано</li>
     </ul>
-
-    <form id="credentialsForm">
-        <div>
-            <label for="handle">Нікнейм:</label>
-            <input type="text" id="handle" name="handle" placeholder="все що після @" required>
-        </div>
-        <div>
-            <label for="appPassword">Пароль:</label>
-            <input type="password" id="appPassword" name="appPassword" placeholder="Settings > App Passwords" required>
-        </div>
-        <div id="initialize-block">
-            <button type="button" id="initializeButton" onclick="initializeSession()">Започаткувати сесію</button>
-            <div id="initialize-spinner"></div>
-        </div>
-        <div id="session-information-block"></div>
-    </form>
 
     <div id="analyze-block">
         <div id="analyze-button-block">

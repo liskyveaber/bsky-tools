@@ -1,28 +1,12 @@
-document.addEventListener('DOMContentLoaded', function () {
-    if (localStorage.getItem('handle') && document.getElementById('handle')) {
-        document.getElementById('handle').value = localStorage.getItem('handle');
-    }
-
-    if (localStorage.getItem('appPassword') && document.getElementById('appPassword')) {
-        document.getElementById('appPassword').value = localStorage.getItem('appPassword');
-    }
-});
-
 async function analyze() {
     document.getElementById('analyze-spinner').style.display = 'flex';
 
-    const handle = localStorage.getItem('handle');
-    const token = localStorage.getItem('token');
-
-    if (handle && token) {
-        const profile = await loadProfile(handle, token);
+    if (localStorage.getItem('handle') && localStorage.getItem('token')) {
+        const profile = await loadProfile(localStorage.getItem('handle'), localStorage.getItem('token'));
 
         if (profile && profile.did) {
-            const getFollowersUrl = 'https://bsky.social/xrpc/app.bsky.graph.getFollowers?';
-            const followers = await loadAllUsers(getFollowersUrl, profile.did, token);
-
-            const getFollowingUrl = 'https://bsky.social/xrpc/app.bsky.graph.getFollows?';
-            const following = await loadAllUsers(getFollowingUrl, profile.did, token);
+            const followers = await loadAllUsers('https://bsky.social/xrpc/app.bsky.graph.getFollowers?', profile.did, localStorage.getItem('token'));
+            const following = await loadAllUsers('https://bsky.social/xrpc/app.bsky.graph.getFollows?', profile.did, localStorage.getItem('token'));
 
             const unfollowers = findUnfollowers(followers, following);
 
@@ -80,49 +64,6 @@ function drawUnfollowersTable(unfollowers) {
     analyzeInformationBlock.appendChild(table);
 }
 
-function initializeSession() {
-    document.getElementById('initialize-spinner').style.display = 'flex';
-
-    var handleValue = document.getElementById('handle').value;
-    var appPasswordValue = document.getElementById('appPassword').value;
-
-    if (handleValue && appPasswordValue) {
-        var requestBody = JSON.stringify({
-            "identifier": handleValue,
-            "password": appPasswordValue
-        });
-
-        fetch('https://bsky.social/xrpc/com.atproto.server.createSession', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: requestBody
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.error) {
-                    localStorage.setItem('handle', handleValue);
-                    localStorage.setItem('appPassword', appPasswordValue);
-                    localStorage.setItem('token', data.accessJwt);
-
-                    showMessageInBlock('session-information-block', 'Сесію успішно започатковано!', 'green');
-
-                    document.getElementById('analyze-button-block').style.display = 'flex';
-                } else if (data.error && data.message) {
-                    showMessageInBlock('session-information-block', 'Не вдалось отримати дані для автентифікації. Помилка: ' + data.message, 'red');
-                }
-            })
-            .catch(error => {
-                console.error('Error during session initialization:', error);
-            });
-    } else {
-        showMessageInBlock('session-information-block', 'Необхідні для автентикації дані відсутні', 'red');
-    }
-
-    document.getElementById('initialize-spinner').style.display = 'none';
-}
-
 function findUnfollowers(followers, following) {
     const followersMap = new Map();
     const followingMap = new Map();
@@ -140,7 +81,7 @@ async function loadAllUsers(url, did, token) {
     params.append('actor', did);
     params.append('limit', 100);
 
-    var response = await loadUsers(url, params, token);
+    const response = await loadUsers(url, params, token);
 
     if (url.includes('getFollowers')) {
         if (response && response.followers) {
@@ -202,16 +143,4 @@ async function loadUsers(url, params, token) {
     const data = await response.json();
 
     return data;
-}
-
-function showMessageInBlock(id, message, color) {
-    const block = document.getElementById(id);
-    block.textContent = message;
-    block.style.color = color;
-    block.style.display = 'flex';
-
-    setTimeout(function () {
-        block.style.display = 'none';
-        block.textContent = '';
-    }, 3000);
 }
