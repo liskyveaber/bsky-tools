@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function loadUnfollowersPage() {
+    document.getElementById('app-spinner-overlay').style.display = 'flex';
+
     const timestamp = new Date().getTime();
 
     fetch('https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers' + '?timestamp=' + timestamp, {
@@ -36,14 +38,25 @@ function loadUnfollowersPage() {
             if (localStorage.getItem('appPassword') && document.getElementById('appPassword')) {
                 document.getElementById('appPassword').value = localStorage.getItem('appPassword');
             }
+
+            document.getElementById('app-spinner-overlay').style.display = 'none';
         })
-        .catch(error => console.error('Error while loading content:', error));
+        .catch(error => {
+            console.error('Error while loading content:', error)
+
+            document.getElementById('app-spinner-overlay').style.display = 'none';
+            navigateToHome();
+        });
 }
 
 function navigateToHome() {
+    document.getElementById('app-spinner-overlay').style.display = 'flex';
+
     var homeUrl = 'https://liskyveaber.github.io/bsky-tools';
     var timestamp = new Date().getTime();
     var urlWithTimestamp = homeUrl + '?timestamp=' + timestamp;
 
     window.location.href = urlWithTimestamp;
+
+    document.getElementById('app-spinner-overlay').style.display = 'none';
 }
