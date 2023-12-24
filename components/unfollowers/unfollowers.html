@@ -1,0 +1,61 @@
+<!doctype html>
+<!--suppress HtmlRequiredLangAttribute -->
+<html>
+
+<head>
+    <title>Знайти невзаємні підписки</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon"
+          type="image/png"
+          sizes="64x64"
+          href="https://liskyveaber.github.io/bsky-tools/icon/favicon.png">
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.css">
+</head>
+
+<body>
+    <h2>Знайти невзаємні підписки</h2>
+
+    <h5>Опис</h5>
+    <ul>
+        <li>Шукати користувачів, яких ви читаєте, але які не читають вас навзаєм</li>
+    </ul>
+
+    <h5>Застереження</h5>
+    <ul>
+        <li>Користувачів які читають вас, але були заблоковані, не враховано</li>
+        <li>Користувачів яких читаєте ви, але які заблокували вас, не враховано</li>
+    </ul>
+
+    <form id="credentialsForm">
+        <div>
+            <label for="handle">Нікнейм:</label>
+            <input type="text" id="handle" name="handle" placeholder="все що після @" required>
+        </div>
+        <div>
+            <label for="appPassword">Пароль:</label>
+            <input type="password" id="appPassword" name="appPassword" placeholder="Settings > App Passwords" required>
+        </div>
+        <div id="initialize-block">
+            <button type="button" id="initializeButton" onclick="initializeSession()">Започаткувати сесію</button>
+            <div id="initialize-spinner"></div>
+        </div>
+        <div id="session-information-block"></div>
+    </form>
+
+    <div id="analyze-block">
+        <div id="analyze-button-block">
+            <button type="button" id="analyzeButton" onclick="analyze()">Шукати невзаємні підписки</button>
+        </div>
+        <div id="analyze-spinner"></div>
+    </div>
+    <div id="analyze-information-block"></div>
+
+    <div id="table-block"></div>
+
+    <script src="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.js"></script>
+</body>
+
+</html>

@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function loadUnfollowersPage() {
     const timestamp = new Date().getTime();
 
-    fetch('https://liskyveaber.github.io/bsky-tools-unfollowers/' + '?timestamp=' + timestamp, {
+    fetch('https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers' + '?timestamp=' + timestamp, {
         method: 'GET',
         headers: {
             'Accept': 'text/html'
