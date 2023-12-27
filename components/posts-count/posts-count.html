@@ -1,0 +1,29 @@
+<h2>Порахувати кількість постів за певний день</h2>
+
+<h5>Опис</h5>
+<ul>
+    <li>Порахувати кількість постів і відповідей для вказаного акаунту за певний день</li>
+</ul>
+
+<h5>Застереження</h5>
+<ul>
+    <li>Репости теж рахуються, якщо акаунт репостив свої пости</li>
+    <li>Пошук постів за старі дати займає більше часу через обмеження АПІ</li>
+</ul>
+
+<form id="posts-count-form">
+    <div>
+        <label class="posts-count-label" for="posts-count-handle-input">Нікнейм:</label>
+        <input id="posts-count-handle-input" class="posts-count-input" type="text" name="handle"
+            placeholder="все що після @" required>
+    </div>
+    <div>
+        <label class="posts-count-label" for="posts-count-date-input">Дата:</label>
+        <input id="posts-count-date-input" class="posts-count-input" type="date" name="date" required>
+    </div>
+    <div class="posts-count-button">
+        <button type="button" onclick="countPosts()">Порахувати кількість постів</button>
+    </div>
+</form>
+
+<div id="table-block"></div>

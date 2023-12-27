@@ -1,44 +1,7 @@
 /* html elements */
+
 div {
     display: flex;
-}
-
-h2 {
-    margin-bottom: 12px;
-}
-
-h5 {
-    margin-bottom: 8px;
-    margin-top: 24px;
-}
-
-h5,
-li {
-    font-size: 16px;
-}
-
-img {
-    width: 50px;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-table,
-th,
-td {
-    border: 1px solid white;
-}
-
-td {
-    padding: 12px;
-}
-
-ul {
-    margin-bottom: 8px;
-    margin-top: 8px;
 }
 
 /* ids */
@@ -72,19 +35,4 @@ ul {
     display: none;
     height: 10px;
     width: 10px;
-}
-
-#table-block {
-    margin-top: 24px;
-    text-align: center;
-}
-
-/* classes */
-
-.profile-link {
-    color: white;
-}
-
-.profile-link:hover {
-    color: rgb(0, 133, 255);
 }

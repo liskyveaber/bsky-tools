@@ -28,6 +28,10 @@ function displayAnalyzeBlock(sessionInitialized) {
     }
 }
 
+function hideAppSpinner() {
+    document.getElementById('app-spinner-overlay').style.display = 'none';
+}
+
 async function initializeSession(handle, password, showErrors) {
     return new Promise(async (resolve, reject) => {
         var sessionInitialized = false;
@@ -72,15 +76,31 @@ async function initializeSessionManually() {
         const sessionInitialized = await initializeSession(document.getElementById('handle').value, document.getElementById('password').value, true);
 
         setupSessionForm(sessionInitialized);
-        populatePreviouslyUsedValues(sessionInitialized);
+        populatePreviouslyUsedValuesForSessionForm(sessionInitialized);
         displayAnalyzeBlock(sessionInitialized);
     } else {
         showMessageInBlock('session-information-block', 'Необхідні для автентикації дані відсутні', 'red', showErrors);
     }
 }
 
+async function loadProfile(handle, token) {
+    const params = new URLSearchParams();
+    params.append('actor', handle);
+
+    const response = await fetch('https://bsky.social/xrpc/app.bsky.actor.getProfile?' + params.toString(), {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    });
+
+    const data = await response.json();
+
+    return data;
+}
+
 async function loadUnfollowersPage() {
-    document.getElementById('app-spinner-overlay').style.display = 'flex';
+    showAppSpinner();
 
     const sessionInitialized = await initializeSession(localStorage.getItem('handle'), localStorage.getItem('password'), false);
 
@@ -96,30 +116,77 @@ async function loadUnfollowersPage() {
             document.getElementById('content-container').innerHTML = html;
 
             setupSessionForm(sessionInitialized);
-            populatePreviouslyUsedValues(sessionInitialized);
+            populatePreviouslyUsedValuesForSessionForm(sessionInitialized);
             displayAnalyzeBlock(sessionInitialized);
-
-            document.getElementById('app-spinner-overlay').style.display = 'none';
+            hideAppSpinner();
         })
         .catch(error => {
             console.error('Error while loading content:', error)
 
-            document.getElementById('app-spinner-overlay').style.display = 'none';
+            hideAppSpinner();
+            navigateToHome();
+        });
+}
+
+async function loadPostCountPage() {
+    showAppSpinner();
+
+    const sessionInitialized = await initializeSession(localStorage.getItem('handle'), localStorage.getItem('password'), false);
+
+    fetch('https://liskyveaber.github.io/bsky-tools/components/posts-count/posts-count' + '?timestamp=' + new Date().getTime(), {
+        method: 'GET',
+        headers: {
+            'Accept': 'text/html'
+        }
+    })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('grid-container').style.display = 'none';
+            document.getElementById('content-container').innerHTML = html;
+
+            setupSessionForm(sessionInitialized);
+            populatePreviouslyUsedValuesForSessionForm(sessionInitialized);
+            populateDefaultValuesForPostsCountForm('posts-count-handle-input', 'posts-count-date-input');
+            hideAppSpinner();
+        })
+        .catch(error => {
+            console.error('Error while loading content:', error)
+
+            hideAppSpinner();
             navigateToHome();
         });
 }
 
 function navigateToHome() {
-    document.getElementById('app-spinner-overlay').style.display = 'flex';
+    showAppSpinner();
 
     const homeUrl = 'https://liskyveaber.github.io/bsky-tools?timestamp=' + new Date().getTime();
 
     window.location.href = homeUrl;
 
-    document.getElementById('app-spinner-overlay').style.display = 'none';
+    hideAppSpinner();
 }
 
-function populatePreviouslyUsedValues(sessionInitialized) {
+function populateDefaultValuesForPostsCountForm(handleElementId, dateElementId) {
+    const handleElement = document.getElementById(handleElementId);
+
+    if (handleElement && localStorage.getItem('handle')) {
+        handleElement.value = localStorage.getItem('handle');
+    }
+
+    const dateElement = document.getElementById(dateElementId);
+
+    if (dateElement) {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = currentDate.getDate().toString().padStart(2, '0');
+
+        dateElement.value = `${year}-${month}-${day}`;
+    }
+}
+
+function populatePreviouslyUsedValuesForSessionForm(sessionInitialized) {
     if (!sessionInitialized) {
         if (localStorage.getItem('handle') && document.getElementById('handle')) {
             document.getElementById('handle').value = localStorage.getItem('handle');
@@ -139,6 +206,10 @@ function setupSessionForm(sessionInitialized) {
     }
 }
 
+function showAppSpinner() {
+    document.getElementById('app-spinner-overlay').style.display = 'flex';
+}
+
 function showMessageInBlock(id, message, color, showErrors) {
     if (showErrors) {
         const block = document.getElementById(id);
@@ -154,4 +225,10 @@ function showMessageInBlock(id, message, color, showErrors) {
             }, 3000);
         }
     }
+}
+
+function updateSpinnerLabel(labelToSet) {
+    const spinnerLabelElement = document.getElementById("spinner-label");
+
+    spinnerLabelElement.textContent = labelToSet;
 }

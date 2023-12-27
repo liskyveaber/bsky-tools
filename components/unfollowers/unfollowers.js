@@ -33,7 +33,7 @@ function drawUnfollowersTable(unfollowers) {
             const tableRow = document.createElement('tr');
 
             tableRow.innerHTML =
-                `<td class="td-name">${user.displayName}</td>
+                `<td>${user.displayName}</td>
                 <td><a href="https://bsky.app/profile/${user.handle}" target="_blank" class="profile-link">@${user.handle}</a></td>`;
 
             tableBody.appendChild(tableRow);
@@ -48,10 +48,12 @@ function drawUnfollowersTable(unfollowers) {
         unfollowers.forEach(user => {
             const tableRow = document.createElement('tr');
 
+            const description = user.description ? user.description : '';
+
             tableRow.innerHTML =
                 `<td><img src="${user.avatar}" alt="Avatar"></td>
-                <td class="td-name">${user.displayName}</td>
-                <td>${user.description}</td>
+                <td>${user.displayName}</td>
+                <td>${description}</td>
                 <td><a href="https://bsky.app/profile/${user.handle}" target="_blank" class="profile-link">@${user.handle}</a></td>`;
 
             tableBody.appendChild(tableRow);
@@ -59,9 +61,9 @@ function drawUnfollowersTable(unfollowers) {
         });
     }
 
-    const analyzeInformationBlock = document.getElementById('table-block');
-    analyzeInformationBlock.innerHTML = '';
-    analyzeInformationBlock.appendChild(table);
+    const tableBlock = document.getElementById('table-block');
+    tableBlock.innerHTML = '';
+    tableBlock.appendChild(table);
 }
 
 function findUnfollowers(followers, following) {
@@ -114,22 +116,6 @@ async function loadAllUsers(url, did, token) {
     }
 
     return userList;
-}
-
-async function loadProfile(handle, token) {
-    const params = new URLSearchParams();
-    params.append('actor', handle);
-
-    const response = await fetch('https://bsky.social/xrpc/app.bsky.actor.getProfile?' + params.toString(), {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
-    });
-
-    const data = await response.json();
-
-    return data;
 }
 
 async function loadUsers(url, params, token) {

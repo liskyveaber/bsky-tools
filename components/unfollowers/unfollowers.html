@@ -1,41 +1,22 @@
-<!doctype html>
-<!--suppress HtmlRequiredLangAttribute -->
-<html>
+<h2>Знайти невзаємні підписки</h2>
 
-<head>
-    <title>Знайти невзаємні підписки</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="64x64" href="https://liskyveaber.github.io/bsky-tools/icon/favicon.png">
-    <link rel="stylesheet" type="text/css"
-        href="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.css">
-</head>
+<h5>Опис</h5>
+<ul>
+    <li>Шукати користувачів, яких ви читаєте, але які не читають вас навзаєм</li>
+</ul>
 
-<body contenteditable="false">
-    <h2>Знайти невзаємні підписки</h2>
+<h5>Застереження</h5>
+<ul>
+    <li>Користувачів які читають вас, але були заблоковані, не враховано</li>
+    <li>Користувачів яких читаєте ви, але які заблокували вас, не враховано</li>
+</ul>
 
-    <h5>Опис</h5>
-    <ul>
-        <li>Шукати користувачів, яких ви читаєте, але які не читають вас навзаєм</li>
-    </ul>
-
-    <h5>Застереження</h5>
-    <ul>
-        <li>Користувачів які читають вас, але були заблоковані, не враховано</li>
-        <li>Користувачів яких читаєте ви, але які заблокували вас, не враховано</li>
-    </ul>
-
-    <div id="analyze-block">
-        <div id="analyze-button-block">
-            <button type="button" id="analyzeButton" onclick="analyze()">Шукати невзаємні підписки</button>
-        </div>
-        <div id="analyze-spinner"></div>
+<div id="analyze-block">
+    <div id="analyze-button-block">
+        <button type="button" id="analyzeButton" onclick="analyze()">Шукати невзаємні підписки</button>
     </div>
-    <div id="analyze-information-block"></div>
+    <div id="analyze-spinner"></div>
+</div>
+<div id="analyze-information-block"></div>
 
-    <div id="table-block"></div>
-
-    <script src="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.js"></script>
-</body>
-
-</html>
+<div id="table-block"></div>

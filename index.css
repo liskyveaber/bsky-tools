@@ -5,6 +5,9 @@ html {
     background-color: black;
     color: white;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
 button {
@@ -40,12 +43,31 @@ footer>a:hover {
     color: rgb(0, 133, 255);
 }
 
+h2 {
+    margin-bottom: 12px;
+}
+
+h5 {
+    margin-bottom: 8px;
+    margin-top: 24px;
+}
+
+h5,
+li {
+    font-size: 16px;
+}
+
 input {
     background-color: rgb(38, 39, 45);
     border: none;
     border-radius: 5px;
     color: white;
+    font-size: 15px;
     padding: 16px;
+}
+
+img {
+    width: 50px;
 }
 
 label {
@@ -59,12 +81,33 @@ input {
     min-width: 100px;
 }
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table,
+th,
+td {
+    border: 1px solid white;
+}
+
+td {
+    padding: 12px;
+}
+
+ul {
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
 /* ids */
 
 #app-spinner-overlay {
     align-items: center;
     background-color: black;
     display: none;
+    flex-direction: column;
     justify-content: center;
     height: 100%;
     left: 0;
@@ -97,6 +140,8 @@ input {
 }
 
 #grid-container {
+    display: flex;
+    gap: 32px;
     padding: 24px;
 }
 
@@ -126,10 +171,19 @@ input {
     margin-top: 12px;
 }
 
+#table-block {
+    margin-top: 24px;
+    text-align: center;
+}
+
 #session-information-block {
     color: red;
     display: none;
     font-size: 10px;
+}
+
+#spinner-label {
+    margin-top: 24px;
 }
 
 /* classes */
@@ -165,6 +219,14 @@ input {
 .nav-container {
     padding: 24px;
     text-align: center;
+}
+
+.profile-link {
+    color: white;
+}
+
+.profile-link:hover {
+    color: rgb(0, 133, 255);
 }
 
 /* animations */

@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="64x64" href="https://liskyveaber.github.io/bsky-tools/icon/favicon.png">
     <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/index.css">
+    <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.css">
+    <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/components/posts-count/posts-count.css">
 </head>
 
 <body contenteditable="false">
@@ -43,6 +45,10 @@
             <h3>Знайти невзаємні підписки</h3>
             <p>Шукати користувачів, яких ви читаєте, але які не читають вас навзаєм</p>
         </div>
+        <div class="card" onclick="loadPostCountPage()">
+            <h3>Порахувати кількість постів за день</h3>
+            <p>Порахувати кількість постів для вказаного акаунту за певний день</p>
+        </div>
     </div>
     <div id="content-container"></div>
 
@@ -50,15 +56,17 @@
         Розроблено <a href="https://bsky.app/profile/liskyveaber.bsky.social"
             target="_blank">@liskyveaber.bsky.social</a>. Всі права не захищено
         <br>
-        Версія 2.1.4
+        Версія 3.0.0
     </footer>
 
     <div id="app-spinner-overlay">
         <div class="app-spinner"></div>
+        <div id="spinner-label"></div>
     </div>
 
     <script src="https://liskyveaber.github.io/bsky-tools/index.js"></script>
     <script src="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.js"></script>
+    <script src="https://liskyveaber.github.io/bsky-tools/components/posts-count/posts-count.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,24 @@
+/* ids */
+
+#posts-count-date-input {
+    cursor: pointer;
+}
+
+#posts-count-form {
+    margin-top: 16px;
+}
+
+/* classes */
+
+.posts-count-button {
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+.posts-count-input {
+    min-width: 200px;
+}
+
+.posts-count-label {
+    min-width: 100px;
+}
