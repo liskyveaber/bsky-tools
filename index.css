@@ -146,6 +146,7 @@ ul {
 
 #grid-container {
     display: flex;
+    flex-flow: wrap;
     gap: 32px;
     padding: 24px;
 }
