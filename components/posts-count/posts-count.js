@@ -44,7 +44,7 @@ async function countPosts() {
                     searchFinished = true;
                 }
 
-                updateSpinnerLabel('Оброблено ' + (pageCounter * 100 + postsCounter) + ' постів...');
+                // updateSpinnerLabel('Оброблено ' + (pageCounter * 100 + postsCounter) + ' постів...');
                 pageCounter++;
             }
 
