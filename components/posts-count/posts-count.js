@@ -51,7 +51,6 @@ async function countPosts() {
             }
 
             drawPostsCountTable(handleElement.value, inputDateElement.value, postsCounter);
-            console.log('Found ' + postsCounter + ' posts at ' + inputDateElement.value);
         }
     } else {
         showInformationMessageInBlock('analyze-information-block', 'Відсутні необхідні дані для підрахунку', 'red');
