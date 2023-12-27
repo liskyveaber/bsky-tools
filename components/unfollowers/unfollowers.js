@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedReference
+
 async function analyze() {
     document.getElementById('analyze-spinner').style.display = 'flex';
 
@@ -77,13 +79,14 @@ function findUnfollowers(followers, following) {
 }
 
 async function loadAllUsers(url, did, token) {
-    var userList = [];
+    let userList = [];
 
     const params = new URLSearchParams();
     params.append('actor', did);
-    params.append('limit', 100);
+    params.append('limit', '100');
+    params.append('timestamp', new Date().getTime().toString());
 
-    var response = await loadUsers(url, params, token);
+    let response = await loadUsers(url, params, token);
 
     if (url.includes('getFollowers')) {
         if (response && response.followers) {
@@ -99,6 +102,7 @@ async function loadAllUsers(url, did, token) {
         if (params.has('cursor')) {
             params.set('cursor', response.cursor);
         } else {
+            params.delete('timestamp');
             params.append('cursor', response.cursor);
         }
 
@@ -126,7 +130,5 @@ async function loadUsers(url, params, token) {
         }
     });
 
-    const data = await response.json();
-
-    return data;
+    return await response.json();
 }

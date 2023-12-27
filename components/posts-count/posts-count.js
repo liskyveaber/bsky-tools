@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedReference
+
 function checkIfDatesMatch(inputDateAsString, actualDateAsString) {
     const inputDate = new Date(`${inputDateAsString}T00:00:00.000Z`);
     const actuaDate = new Date(actualDateAsString);
@@ -17,20 +19,20 @@ async function countPosts() {
         const profile = await loadProfile(handleElement.value, token);
 
         if (profile && profile.did) {
-            var postsCounter = 0;
-            var pageCounter = 0;
-            var searchFinished = false;
-            var cursor;
+            let postsCounter = 0;
+            let pageCounter = 0;
+            let searchFinished = false;
+            let cursor = undefined;
 
             while (!searchFinished) {
                 const response = await loadAuthorFeed(profile.did, token, cursor);
                 const posts = response.feed.map(feed => feed.post);
 
-                for (var i = 0; i < posts.length; i++) {
+                for (let i = 0; i < posts.length; i++) {
                     if (checkIfDatesMatch(inputDateElement.value, posts[i].record.createdAt) || posts[i].repostCount > 0) {
                         postsCounter++;
                     } else if (isInputDateBefore(inputDateElement.value, posts[i].record.createdAt)) {
-                        continue;
+
                     } else {
                         searchFinished = true;
 
@@ -100,7 +102,7 @@ function drawPostsCountTable(handle, date, postsCount) {
 }
 
 function isInputDateBefore(inputDateAsString, actualDateAsString) {
-    var isInputDateBefore = false;
+    let isInputDateBefore = false;
 
     const inputDate = new Date(`${inputDateAsString}T00:00:00.000Z`);
     const actuaDate = new Date(actualDateAsString);
@@ -122,10 +124,13 @@ async function loadAuthorFeed(did, token, cursor) {
     const params = new URLSearchParams();
     params.append('actor', did);
     params.append('filter', 'posts_with_replies');
-    params.append('limit', 100);
+    params.append('limit', '100');
 
     if (cursor) {
+        params.delete('timestamp');
         params.append('cursor', cursor);
+    } else {
+        params.append('timestamp', new Date().getTime().toString());
     }
 
     const response = await fetch('https://bsky.social/xrpc/app.bsky.feed.getAuthorFeed?' + params.toString(), {
@@ -135,7 +140,5 @@ async function loadAuthorFeed(did, token, cursor) {
         }
     });
 
-    const data = await response.json();
-
-    return data;
+    return await response.json();
 }
