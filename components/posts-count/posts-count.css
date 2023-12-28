@@ -8,15 +8,14 @@
     margin-top: 24px;
 }
 
+#posts-count-form > div {
+    max-width: 20em;
+}
+
 /* classes */
 
 .posts-count-button {
-    margin-bottom: 12px;
-    margin-top: 12px;
-}
-
-.posts-count-input {
-    min-width: 200px;
+    margin: 12px 0;
 }
 
 .posts-count-label {
