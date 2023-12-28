@@ -1,7 +1,8 @@
 // noinspection JSUnresolvedReference
 
 async function analyze() {
-    document.getElementById('analyze-spinner').style.display = 'flex';
+    showAppSpinner();
+    updateSpinnerLabel('Відбувається пошук невзаємних підписок...');
 
     if (localStorage.getItem('handle') && localStorage.getItem('token')) {
         const profile = await loadProfile(localStorage.getItem('handle'), localStorage.getItem('token'));
@@ -18,7 +19,8 @@ async function analyze() {
         showInformationMessageInBlock('analyze-information-block', 'Відсутні необхідні дані для автентифікації. Спробуйте започаткувати сесію ще раз', 'red');
     }
 
-    document.getElementById('analyze-spinner').style.display = 'none';
+    updateSpinnerLabel('');
+    hideAppSpinner();
 }
 
 function drawUnfollowersTable(unfollowers) {
