@@ -17,38 +17,60 @@ async function countPosts() {
 
     if (handleElement && handleElement.value && inputDateElement && inputDateElement.value && token) {
         const profile = await loadProfile(handleElement.value, token);
+        const handle = handleElement.value;
+        const inputDate = inputDateElement.value;
 
         if (profile && profile.did) {
             let postsCounter = 0;
-            let pageCounter = 0;
-            let searchFinished = false;
-            let cursor = undefined;
+            const postsCounterFromLocalStorage = tryFindDataInLocalStorage(handle, inputDate);
 
-            while (!searchFinished) {
-                const response = await loadAuthorFeed(profile.did, token, cursor);
-                const posts = response.feed.map(feed => feed.post);
+            if (postsCounterFromLocalStorage > -1) {
+                postsCounter = postsCounterFromLocalStorage;
+            } else {
+                let pageCounter = 0;
+                let searchFinished = false;
+                let cursor = undefined;
 
-                for (let i = 0; i < posts.length; i++) {
-                    if (checkIfDatesMatch(inputDateElement.value, posts[i].record.createdAt) || posts[i].repostCount > 0) {
-                        postsCounter++;
-                    } else if (!isInputDateBefore(inputDateElement.value, posts[i].record.createdAt)) {
-                        searchFinished = true;
+                const dataMap = new Map();
 
-                        break;
+                while (!searchFinished) {
+                    const response = await loadAuthorFeed(profile.did, token, cursor);
+                    const posts = response.feed.map(feed => feed.post);
+
+                    for (let i = 0; i < posts.length; i++) {
+                        const postCreatedDate = posts[i].record.createdAt;
+
+                        if (isInputDateBefore(inputDate, postCreatedDate) && dayIsFinished(postCreatedDate)) {
+                            incrementCountForDate(dataMap, generateDateForSaving(postCreatedDate));
+                        }
+
+                        if (checkIfDatesMatch(inputDate, postCreatedDate) || posts[i].repostCount > 0) {
+                            postsCounter++;
+                        } else if (!isInputDateBefore(inputDate, postCreatedDate)) {
+                            searchFinished = true;
+
+                            break;
+                        }
                     }
+
+                    if (response.cursor) {
+                        cursor = response.cursor;
+                    } else {
+                        searchFinished = true;
+                    }
+
+                    updateSpinnerLabel('Оброблено ' + (pageCounter * 100 + postsCounter) + ' постів...');
+                    pageCounter++;
                 }
 
-                if (response.cursor) {
-                    cursor = response.cursor;
-                } else {
-                    searchFinished = true;
+                if (dayIsFinished(inputDate)) {
+                    dataMap.set(generateDateForSaving(inputDate), postsCounter);
                 }
 
-                updateSpinnerLabel('Оброблено ' + (pageCounter * 100 + postsCounter) + ' постів...');
-                pageCounter++;
+                saveMapToLocalStorage(handle, dataMap);
             }
 
-            drawPostsCountTable(handleElement.value, inputDateElement.value, postsCounter);
+            drawPostsCountTable(handle, inputDate, postsCounter);
         }
     } else {
         showInformationMessageInBlock('analyze-information-block', 'Відсутні необхідні дані для підрахунку', 'red');
@@ -56,6 +78,35 @@ async function countPosts() {
 
     hideAppSpinner();
     updateSpinnerLabel('');
+}
+
+function dayIsFinished(date) {
+    const now = new Date();
+    const givenDate = new Date(date);
+    const timeDifference = now - givenDate;
+    const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+    return daysDifference >= 2 || now.getDay() - givenDate.getDay() === 2;
+}
+
+/**
+ * Deserializes json string into Map<string, Map<string, number>>
+ */
+function deserializeDataMap(jsonString) {
+    const deserializedData = JSON.parse(jsonString);
+    const dataMap = new Map();
+
+    for (let outerKey in deserializedData) {
+        const innerMap = new Map();
+
+        for (let innerKey in deserializedData[outerKey]) {
+            innerMap.set(innerKey, deserializedData[outerKey][innerKey]);
+        }
+
+        dataMap.set(outerKey, innerMap);
+    }
+
+    return dataMap;
 }
 
 function drawPostsCountTable(handle, date, postsCount) {
@@ -98,6 +149,32 @@ function drawPostsCountTable(handle, date, postsCount) {
     tableBlock.appendChild(table);
 }
 
+/**
+ * Produces date as string in format 'yyyy-MM-dd'
+ */
+function generateDateForSaving(date) {
+    const currentDate = new Date(date);
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+/**
+ * @param dataMap map with data
+ * @param dateAsString date As Stirng in format yyyy-MM-dd
+ */
+function incrementCountForDate(dataMap, dateAsString) {
+    if (dataMap.has(dateAsString)) {
+        const currentCount = dataMap.get(dateAsString);
+
+        dataMap.set(dateAsString, currentCount + 1);
+    } else {
+        dataMap.set(dateAsString, 1);
+    }
+}
+
 function isInputDateBefore(inputDateAsString, actualDateAsString) {
     let isInputDateBefore = false;
 
@@ -138,4 +215,67 @@ async function loadAuthorFeed(did, token, cursor) {
     });
 
     return await response.json();
+}
+
+function saveMapToLocalStorage(handle, dataMapToSave) {
+    if (dataMapToSave && dataMapToSave.size > 0) {
+        const actualDataMapAsJsonString = localStorage.getItem('postsCount-data');
+
+        if (!actualDataMapAsJsonString) {
+            let newHandleDataMap = new Map();
+
+            newHandleDataMap.set(handle, dataMapToSave);
+
+            localStorage.setItem('postsCount-data', serializeDataMap(newHandleDataMap));
+        } else {
+            let actualDataMap = deserializeDataMap(actualDataMapAsJsonString);
+
+            if (!actualDataMap.has(handle)) {
+                actualDataMap.set(handle, dataMapToSave);
+            } else {
+                for (let [key, value] of dataMapToSave.entries()) {
+                    if (!actualDataMap.get(handle).has(key)) {
+                        actualDataMap.get(handle).set(key, value);
+                    }
+                }
+            }
+
+            localStorage.setItem('postsCount-data', serializeDataMap(actualDataMap));
+        }
+    }
+}
+
+/**
+ * Serializes Map<string, Map<string, number>> into json string
+ */
+function serializeDataMap(dataMap) {
+    const serializedData = {};
+
+    for (let [outerKey, innerMap] of dataMap.entries()) {
+        const serializedInnerMap = {};
+
+        for (let [innerKey, innerValue] of innerMap.entries()) {
+            serializedInnerMap[innerKey] = innerValue;
+        }
+
+        serializedData[outerKey] = serializedInnerMap;
+    }
+
+    return JSON.stringify(serializedData);
+}
+
+function tryFindDataInLocalStorage(handle, date) {
+    let postsCounter = -1;
+
+    const postsCountDataString = localStorage.getItem('postsCount-data');
+    if (postsCountDataString && postsCountDataString.length > 0) {
+        const dataMap = deserializeDataMap(postsCountDataString);
+        const preparedDate = generateDateForSaving(date);
+
+        if (dataMap && dataMap.has(handle) && dataMap.get(handle).has(preparedDate)) {
+            postsCounter = dataMap.get(handle).get(preparedDate);
+        }
+    }
+
+    return postsCounter;
 }
