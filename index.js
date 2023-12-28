@@ -77,6 +77,7 @@ async function initializeSession(handle, password, showErrors) {
 
 async function initializeSessionManually() {
     showAppSpinner();
+    updateSpinnerLabel('Започатковуємо сесію...');
 
     if (document.getElementById('credentials-form-handle') &&
         document.getElementById('credentials-form-password')) {
@@ -94,6 +95,7 @@ async function initializeSessionManually() {
     }
 
     hideAppSpinner();
+    updateSpinnerLabel('');
 }
 
 async function loadProfile(handle, token) {
