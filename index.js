@@ -76,6 +76,8 @@ async function initializeSession(handle, password, showErrors) {
 }
 
 async function initializeSessionManually() {
+    showAppSpinner();
+
     if (document.getElementById('credentials-form-handle') &&
         document.getElementById('credentials-form-password')) {
 
@@ -90,6 +92,8 @@ async function initializeSessionManually() {
     } else {
         showMessageInBlock('session-information-block', 'Необхідні для автентикації дані відсутні', 'red', true);
     }
+
+    hideAppSpinner();
 }
 
 async function loadProfile(handle, token) {
