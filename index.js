@@ -76,8 +76,13 @@ async function initializeSession(handle, password, showErrors) {
 }
 
 async function initializeSessionManually() {
-    if (document.getElementById('handle') && document.getElementById('password')) {
-        const sessionInitialized = await initializeSession(document.getElementById('handle').value, document.getElementById('password').value, true);
+    if (document.getElementById('credentials-form-handle') &&
+        document.getElementById('credentials-form-password')) {
+
+        const sessionInitialized = await initializeSession(
+            document.getElementById('credentials-form-handle').value,
+            document.getElementById('credentials-form-password').value,
+            true);
 
         setupSessionForm(sessionInitialized);
         populatePreviouslyUsedValuesForSessionForm(sessionInitialized);
@@ -188,12 +193,12 @@ function populateDefaultValuesForPostsCountForm(handleElementId, dateElementId) 
 
 function populatePreviouslyUsedValuesForSessionForm(sessionInitialized) {
     if (!sessionInitialized) {
-        if (localStorage.getItem('handle') && document.getElementById('handle')) {
-            document.getElementById('handle').value = localStorage.getItem('handle');
+        if (localStorage.getItem('handle') && document.getElementById('credentials-form-handle')) {
+            document.getElementById('credentials-form-handle').value = localStorage.getItem('handle');
         }
 
-        if (localStorage.getItem('password') && document.getElementById('password')) {
-            document.getElementById('password').value = localStorage.getItem('password');
+        if (localStorage.getItem('password') && document.getElementById('credentials-form-password')) {
+            document.getElementById('credentials-form-password').value = localStorage.getItem('password');
         }
     }
 }
