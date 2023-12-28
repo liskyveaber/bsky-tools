@@ -17,7 +17,7 @@ div {
     display: none;
 }
 
-#analyze-button-block>button {
+#analyze-button-block > button {
     min-width: 185px;
 }
 
@@ -25,14 +25,4 @@ div {
     color: red;
     display: none;
     font-size: 10px;
-}
-
-#analyze-spinner {
-    animation: spin 1s linear infinite;
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
-    border-radius: 50%;
-    display: none;
-    height: 10px;
-    width: 10px;
 }
