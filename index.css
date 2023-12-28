@@ -137,18 +137,18 @@ ul {
     padding-right: 24px;
 }
 
-#credentialsForm {
+#credentials-form {
     display: none;
     flex-direction: column;
     margin-top: 28px;
     padding: 0 24px;
 }
 
-#credentialsForm > div {
+#credentials-form > div {
     gap: 8px;
 }
 
-#credentialsForm > p {
+#credentials-form > p {
     gap: 8px;
 }
 
@@ -226,6 +226,10 @@ ul {
 .card:hover {
     background-color: rgb(38, 39, 45);
     cursor: pointer;
+}
+
+.form-input-row {
+    max-width: 20em;
 }
 
 .nav-container {
