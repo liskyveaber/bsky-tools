@@ -31,9 +31,7 @@ async function countPosts() {
                 for (let i = 0; i < posts.length; i++) {
                     if (checkIfDatesMatch(inputDateElement.value, posts[i].record.createdAt) || posts[i].repostCount > 0) {
                         postsCounter++;
-                    } else if (isInputDateBefore(inputDateElement.value, posts[i].record.createdAt)) {
-
-                    } else {
+                    } else if (!isInputDateBefore(inputDateElement.value, posts[i].record.createdAt)) {
                         searchFinished = true;
 
                         break;
