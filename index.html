@@ -2,80 +2,108 @@
 <!--suppress HtmlRequiredLangAttribute, JSUnresolvedLibraryURL -->
 <html>
 
-<head>
-    <title>Небосвинська пісочниця</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" sizes="192x192" href="https://liskyveaber.github.io/bsky-tools/icon/favicon-192.png">
-    <link rel="icon" sizes="128x128" href="https://liskyveaber.github.io/bsky-tools/icon/favicon-128.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://liskyveaber.github.io/bsky-tools/icon/apple-touch-icon.png">
-    <link rel="icon" sizes="192x192" href="https://liskyveaber.github.io/bsky-tools/icon/android-chrome-192x192.png">
-    <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/index.css">
-    <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.css">
-    <link rel="stylesheet" type="text/css" href="https://liskyveaber.github.io/bsky-tools/components/posts-count/posts-count.css">
-</head>
+    <head>
+        <title>Небосвинська пісочниця</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- icons -->
+        <link rel="icon"
+              sizes="192x192"
+              href="https://liskyveaber.github.io/bsky-tools/icon/favicon-192.png">
+        <link rel="icon"
+              sizes="128x128"
+              href="https://liskyveaber.github.io/bsky-tools/icon/favicon-128.png">
+        <link rel="apple-touch-icon"
+              sizes="180x180"
+              href="https://liskyveaber.github.io/bsky-tools/icon/apple-touch-icon.png">
+        <link rel="icon"
+              sizes="192x192"
+              href="https://liskyveaber.github.io/bsky-tools/icon/android-chrome-192x192.png">
+        <!-- styles -->
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://liskyveaber.github.io/bsky-tools/index.css">
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.css">
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://liskyveaber.github.io/bsky-tools/components/posts-count/posts-count.css">
+    </head>
 
-<body contenteditable="false">
-    <nav>
-        <div class="nav-container">
-            <a id="home-link" href="#" onclick="navigateToHome()">Небосвинська пісочниця</a>
+    <body contenteditable="false">
+        <nav>
+            <div class="nav-container">
+                <a id="home-link" href="#" onclick="navigateToHome()">Небосвинська пісочниця</a>
+            </div>
+        </nav>
+
+        <form id="credentialsForm">
+            <p>
+                Спроба автоматично започаткувати сесію зазнала невдачі
+                <br>
+                Будь ласка, започаткуйте нову сесію
+            </p>
+            <div>
+                <label for="handle">Нікнейм:</label>
+                <input id="handle"
+                       type="text"
+                       name="handle"
+                       placeholder="все що після @"
+                       required>
+            </div>
+            <div>
+                <label for="password">Пароль:</label>
+                <input id="password"
+                       type="password"
+                       name="password"
+                       placeholder="Settings > App Passwords"
+                       required>
+            </div>
+            <div id="initialize-block">
+                <button id="initializeButton"
+                        type="button"
+                        onclick="initializeSessionManually()">
+                    Започаткувати сесію
+                </button>
+            </div>
+            <div id="session-information-block"></div>
+        </form>
+
+        <div id="grid-container">
+            <div class="card" onclick="loadUnfollowersPage()">
+                <h3>Знайти невзаємні підписки</h3>
+                <p>Шукати користувачів, яких ви читаєте, але які не читають вас навзаєм</p>
+            </div>
+            <div class="card" onclick="loadPostCountPage()">
+                <h3>Порахувати кількість постів за день</h3>
+                <p>Порахувати кількість постів для вказаного акаунту за певний день</p>
+            </div>
         </div>
-    </nav>
+        <div id="content-container"></div>
 
-    <form id="credentialsForm">
-        <p>
-            Спроба автоматично започаткувати сесію зазнала невдачі
+        <footer>
+            Розроблено <a href="https://bsky.app/profile/liskyveaber.bsky.social"
+                          target="_blank">@liskyveaber.bsky.social</a>. Всі права не захищено
             <br>
-            Будь ласка, започаткуйте нову сесію
-        </p>
-        <div>
-            <label for="handle">Нікнейм:</label>
-            <input type="text" id="handle" name="handle" placeholder="все що після @" required>
-        </div>
-        <div>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" placeholder="Settings > App Passwords" required>
-        </div>
-        <div id="initialize-block">
-            <button type="button" id="initializeButton" onclick="initializeSessionManually()">Започаткувати
-                сесію</button>
-        </div>
-        <div id="session-information-block"></div>
-    </form>
+            Версія 3.0.7
+            <br>
+            <a href="https://www.buymeacoffee.com/liskyveaber">
+                <img id="buy-me-a-coffee-button"
+                     src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=liskyveaber
+                 &button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"
+                     alt="Підтримати на Buy me a coffee"/>
+            </a>
+        </footer>
 
-    <div id="grid-container">
-        <div class="card" onclick="loadUnfollowersPage()">
-            <h3>Знайти невзаємні підписки</h3>
-            <p>Шукати користувачів, яких ви читаєте, але які не читають вас навзаєм</p>
+        <div id="app-spinner-overlay">
+            <div class="app-spinner"></div>
+            <div id="spinner-label"></div>
         </div>
-        <div class="card" onclick="loadPostCountPage()">
-            <h3>Порахувати кількість постів за день</h3>
-            <p>Порахувати кількість постів для вказаного акаунту за певний день</p>
-        </div>
-    </div>
-    <div id="content-container"></div>
 
-    <footer>
-        Розроблено <a href="https://bsky.app/profile/liskyveaber.bsky.social"
-            target="_blank">@liskyveaber.bsky.social</a>. Всі права не захищено
-        <br>
-        Версія 3.0.6
-        <br>
-        <a href="https://www.buymeacoffee.com/liskyveaber">
-            <img id="buy-me-a-coffee-button"
-                 src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=liskyveaber&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"
-                 alt="Підтримати на Buy me a coffee"/>
-        </a>
-    </footer>
-
-    <div id="app-spinner-overlay">
-        <div class="app-spinner"></div>
-        <div id="spinner-label"></div>
-    </div>
-
-    <script src="https://liskyveaber.github.io/bsky-tools/index.js"></script>
-    <script src="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.js"></script>
-    <script src="https://liskyveaber.github.io/bsky-tools/components/posts-count/posts-count.js"></script>
-</body>
+        <script src="https://liskyveaber.github.io/bsky-tools/index.js"></script>
+        <script src="https://liskyveaber.github.io/bsky-tools/components/unfollowers/unfollowers.js"></script>
+        <script src="https://liskyveaber.github.io/bsky-tools/components/posts-count/posts-count.js"></script>
+    </body>
 
 </html>
