@@ -234,9 +234,7 @@ function saveMapToLocalStorage(handle, dataMapToSave) {
                 actualDataMap.set(handle, dataMapToSave);
             } else {
                 for (let [key, value] of dataMapToSave.entries()) {
-                    if (!actualDataMap.get(handle).has(key)) {
-                        actualDataMap.get(handle).set(key, value);
-                    }
+                    actualDataMap.get(handle).set(key, value);
                 }
             }
 
