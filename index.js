@@ -200,9 +200,9 @@ function populatePreviouslyUsedValuesForSessionForm(sessionInitialized) {
 
 function setupSessionForm(sessionInitialized) {
     if (!sessionInitialized) {
-        document.getElementById('credentialsForm').style.display = 'flex';
+        document.getElementById('credentials-form').style.display = 'flex';
     } else {
-        document.getElementById('credentialsForm').style.display = 'none';
+        document.getElementById('credentials-form').style.display = 'none';
     }
 }
 
