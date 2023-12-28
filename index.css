@@ -35,11 +35,11 @@ footer {
     text-align: center;
 }
 
-footer>a {
+footer > a {
     color: white;
 }
 
-footer>a:hover {
+footer > a:hover {
     color: rgb(0, 133, 255);
 }
 
@@ -64,6 +64,7 @@ input {
     color: white;
     font-size: 15px;
     padding: 16px;
+    width: 100%;
 }
 
 img {
@@ -123,7 +124,8 @@ ul {
 }
 
 #content-container {
-    display: block;
+    display: flex;
+    flex-direction: column;
     padding-bottom: 24px;
     padding-left: 24px;
     padding-right: 24px;
@@ -133,14 +135,14 @@ ul {
     display: none;
     flex-direction: column;
     margin-top: 28px;
-    padding-left: 24px;
+    padding: 0 24px;
 }
 
-#credentialsForm>div {
+#credentialsForm > div {
     gap: 8px;
 }
 
-#credentialsForm>p {
+#credentialsForm > p {
     gap: 8px;
 }
 
@@ -159,7 +161,6 @@ ul {
     display: block;
     font-size: 34px;
     font-weight: 500;
-    letter-spacing: 0.25px;
     padding-bottom: 24px;
     padding-top: 24px;
     text-decoration: none;
@@ -190,6 +191,7 @@ ul {
 
 #spinner-label {
     margin-top: 24px;
+    padding: 0 24px;
     text-align: center;
 }
 
@@ -209,12 +211,9 @@ ul {
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    padding-bottom: 16px;
-    padding-left: 36px;
-    padding-right: 36px;
-    padding-top: 16px;
+    padding: 16px 36px;
     min-height: 120px;
-    text-wrap: pretty;
+    text-wrap: normal;
     width: fit-content;
 }
 
