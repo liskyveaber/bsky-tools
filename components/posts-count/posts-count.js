@@ -199,12 +199,10 @@ async function loadAuthorFeed(did, token, cursor) {
     params.append('actor', did);
     params.append('filter', 'posts_with_replies');
     params.append('limit', '100');
+    params.append('timestamp', new Date().getTime().toString());
 
     if (cursor) {
-        params.delete('timestamp');
         params.append('cursor', cursor);
-    } else {
-        params.append('timestamp', new Date().getTime().toString());
     }
 
     const response = await fetch('https://bsky.social/xrpc/app.bsky.feed.getAuthorFeed?' + params.toString(), {

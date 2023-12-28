@@ -104,7 +104,6 @@ async function loadAllUsers(url, did, token) {
         if (params.has('cursor')) {
             params.set('cursor', response.cursor);
         } else {
-            params.delete('timestamp');
             params.append('cursor', response.cursor);
         }
 
