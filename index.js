@@ -1,15 +1,19 @@
+// noinspection JSUnresolvedReference
+
 document.addEventListener('DOMContentLoaded', function () {
+    const now = new Date();
+
     if (localStorage.getItem('reloadTime')) {
         const reloadTime = new Date(localStorage.getItem('reloadTime'));
-        const timeDifference = new Date() - reloadTime;
+        const timeDifference = now - reloadTime;
         const isGreaterThan24Hours = timeDifference > 24 * 60 * 60 * 1000;
 
         if (isGreaterThan24Hours) {
-            localStorage.setItem('reloadTime', now.getTime());
-            location.reload(true);
+            localStorage.setItem('reloadTime', now.getTime().toString());
+            location.reload();
         }
     } else {
-        localStorage.setItem('reloadTime', new Date().getTime());
+        localStorage.setItem('reloadTime', now.getTime().toString());
     }
 
     // cleanup local storage from no longer used entries
@@ -33,8 +37,8 @@ function hideAppSpinner() {
 }
 
 async function initializeSession(handle, password, showErrors) {
-    return new Promise(async (resolve, reject) => {
-        var sessionInitialized = false;
+    return new Promise(async (resolve) => {
+        let sessionInitialized = false;
 
         if (handle && password) {
             const requestBody = JSON.stringify({
@@ -79,7 +83,7 @@ async function initializeSessionManually() {
         populatePreviouslyUsedValuesForSessionForm(sessionInitialized);
         displayAnalyzeBlock(sessionInitialized);
     } else {
-        showMessageInBlock('session-information-block', 'Необхідні для автентикації дані відсутні', 'red', showErrors);
+        showMessageInBlock('session-information-block', 'Необхідні для автентикації дані відсутні', 'red', true);
     }
 }
 
@@ -94,9 +98,7 @@ async function loadProfile(handle, token) {
         }
     });
 
-    const data = await response.json();
-
-    return data;
+    return await response.json();
 }
 
 async function loadUnfollowersPage() {
@@ -160,9 +162,7 @@ async function loadPostCountPage() {
 function navigateToHome() {
     showAppSpinner();
 
-    const homeUrl = 'https://liskyveaber.github.io/bsky-tools?timestamp=' + new Date().getTime();
-
-    window.location.href = homeUrl;
+    window.location.href = 'https://liskyveaber.github.io/bsky-tools?timestamp=' + new Date().getTime();
 
     hideAppSpinner();
 }
