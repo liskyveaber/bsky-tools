@@ -119,8 +119,14 @@ ul {
 }
 
 #buy-me-a-coffee-button {
+    border: 1px solid white;
+    border-radius: 30px;
     margin-top: 12px;
     width: 250px;
+}
+
+#buy-me-a-coffee-button:hover {
+    background-color: rgb(38, 39, 45);
 }
 
 #content-container {
