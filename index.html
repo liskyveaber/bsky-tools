@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Аналітика підписників</title>
+
+        <style>
+          body {
+            margin: 24px;
+          }
+
+          button {
+            display: flex;
+            min-width: 145px;
+            padding: 6px;
+          }
+
+          form {
+            flex-direction: column;
+            margin-bottom: 16px;
+            margin-top: 24px;
+          }
+
+          form > div {
+            gap: 8px;
+          }
+
+          form,
+          div {
+            display: flex;
+          }
+
+          h2 {
+            margin-bottom: 12px;
+          }
+
+          h5 {
+            margin-bottom: 8px;
+            margin-top: 0;
+          }
+
+          h5,
+          li {
+            font-size: 16px;
+          }
+
+          img {
+            width: 50px;
+          }
+
+          label,
+          input {
+            display: flex;
+            margin-bottom: 8px;
+          }
+
+          input {
+            min-width: 100px;
+          }
+
+          table {
+            border-collapse: collapse;
+          }
+
+          table,
+          th,
+          td {
+            border: 1px solid black;
+          }
+
+          td {
+            padding: 12px;
+          }
+
+          ul {
+            margin-bottom: 8px;
+            margin-top: 8px;
+          }
+
+          #analyze-unfollowers-block {
+            margin-bottom: 8px;
+          }
+
+          #analyze-unfollowers-block,
+          #analyze-unfollows-block {
+            align-items: center;
+            gap: 16px;
+          }
+
+          #analyze-unfollowers-button-block > button,
+          #analyze-unfollows-button-block > button {
+            min-width: 185px;
+          }
+
+          #unfollowers-analyze-information-block,
+          #unfollows-analyze-information-block {
+            color: red;
+          }
+
+          #unfollowers-spinner,
+          #unfollows-spinner {
+            animation: spin 1s linear infinite;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            display: none;
+            height: 10px;
+            width: 10px;
+          }
+
+          #table-block {
+            margin-top: 24px;
+            text-align: center;
+          }
+
+          .td-name {
+            min-width: 200px;
+          }
+
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+        </style>
+    </head>
+    <body>
+        <h2>Bluesky-аналітика</h2>
+        <h5>v2.0.0</h5>
+        <h5>Developed by <a href="https://bsky.app/profile/liskyveaber.bsky.social"
+                            target="_blank">@liskyveaber.bsky.social</a>. All rights not reserved</h5>
+        <form>
+            <div>
+                <label for="handle">Нікнейм:</label>
+                <input type="text" id="handle" name="handle" placeholder="все що після @" required>
+            </div>
+        </form>
+        <div id="analyze-unfollowers-block">
+            <div id="analyze-unfollowers-button-block">
+                <button
+                    type="button"
+                    onclick="analyzeConnections('unfollowers-spinner', 'unfollowers-analyze-information-block', 'findUnfollowers')">
+                    Шукати невзаємних підписників
+                </button>
+            </div>
+            <div id="unfollowers-spinner"></div>
+            <div id="unfollowers-analyze-information-block"></div>
+        </div>
+        <div id="analyze-unfollows-block">
+            <div id="analyze-unfollows-button-block">
+                <button
+                    type="button"
+                    onclick="analyzeConnections('unfollows-spinner', 'unfollows-analyze-information-block', 'findUnfollows')">
+                    Шукати невзаємні підписки
+                </button>
+            </div>
+            <div id="unfollows-spinner"></div>
+            <div id="unfollows-analyze-information-block"></div>
+        </div>
+        <div id="table-block"></div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            if (localStorage.getItem('handle')) {
+              document.getElementById('handle').value = localStorage.getItem('handle');
+            }
+          });
+
+          async function analyzeConnections(spinnerId, informationBlockId, analysisType) {
+            const analyzeInformationBlock = document.getElementById('table-block');
+            analyzeInformationBlock.innerHTML = '';
+
+            document.getElementById(spinnerId).style.display = 'flex';
+
+            const handle = document.getElementById('handle').value;
+
+            if (handle) {
+              const profile = await loadProfile(handle);
+
+              if (profile && profile['did']) {
+                const getFollowersUrl = 'https://public.api.bsky.app/xrpc/app.bsky.graph.getFollowers?';
+                const followers = await loadAllUsers(getFollowersUrl, profile['did']);
+
+                const getFollowingUrl = 'https://public.api.bsky.app/xrpc/app.bsky.graph.getFollows?';
+                const following = await loadAllUsers(getFollowingUrl, profile['did']);
+
+                localStorage.setItem('handle', handle);
+
+                if (analysisType === 'findUnfollowers') {
+                  const unfollowers = findUnmatched(followers, following);
+
+                  if (!unfollowers || unfollowers.length === 0) {
+                    showMessageInBlock(
+                        informationBlockId,
+                        'Невзаємних підписників не знайдено!',
+                        'green'
+                    );
+                  } else {
+                    showMessageInBlock(
+                        informationBlockId,
+                        'Знайдено ' + unfollowers.length + ' користувачів',
+                        'black'
+                    );
+
+                    drawUsersTable(unfollowers);
+                  }
+                } else if (analysisType === 'findUnfollows') {
+                  const unfollows = findUnmatched(following, followers);
+
+                  if (!unfollows || unfollows.length === 0) {
+                    showMessageInBlock(
+                        informationBlockId,
+                        'Невзаємних підписок не знайдено!',
+                        'green'
+                    );
+                  } else {
+                    showMessageInBlock(
+                        informationBlockId,
+                        'Знайдено ' + unfollows.length + ' користувачів',
+                        'black'
+                    );
+
+                    drawUsersTable(unfollows);
+                  }
+                }
+              } else {
+                showMessageInBlock(
+                    informationBlockId,
+                    'Не вдалося знайти користувача з цим нікнеймом',
+                    'red'
+                );
+              }
+            } else {
+              showMessageInBlock(
+                  informationBlockId,
+                  'Вкажіть нікнейм',
+                  'red'
+              );
+            }
+
+            document.getElementById(spinnerId).style.display = 'none';
+          }
+
+          function drawUsersTable(unfollowers) {
+            const table = document.createElement('table');
+            const tableHeader = document.createElement('thead');
+
+            tableHeader.innerHTML = '<tr><th>Avatar</th><th>Name</th><th>Description</th><th>Link to Profile</th></tr>';
+            table.appendChild(tableHeader);
+
+            const tableBody = document.createElement('tbody');
+            unfollowers.forEach(user => {
+              const tableRow = document.createElement('tr');
+
+              tableRow.innerHTML =
+                  `<td><img src="${user['avatar']}" alt="Avatar"></td>
+                    <td class="td-name">${user.displayName}</td>
+                    <td>${user.description}</td>
+                    <td><a href="https://bsky.app/profile/${user.handle}" target="_blank">@${user.handle}</a></td>`;
+
+              tableBody.appendChild(tableRow);
+              table.appendChild(tableBody);
+            });
+
+            const analyzeInformationBlock = document.getElementById('table-block');
+
+            analyzeInformationBlock.innerHTML = '';
+            analyzeInformationBlock.appendChild(table);
+          }
+
+          function findUnmatched(userSet1, userSet2) {
+            const userSet1Map = new Map();
+            const userSet2Map = new Map();
+
+            userSet1.forEach(user => userSet1Map.set(user['did'], true));
+            userSet2.forEach(user => userSet2Map.set(user['did'], true));
+
+            return userSet2.filter(obj => !userSet1Map.has(obj['did']));
+          }
+
+          async function loadAllUsers(url, did) {
+            let userList = [];
+
+            const params = new URLSearchParams();
+
+            params.append('actor', did);
+            params.append('limit', '95');
+
+            let response = await loadUsers(url, params);
+
+            if (url.includes('getFollowers')) {
+              if (response && response['followers']) {
+                userList = response['followers'];
+              }
+            } else if (url.includes('getFollows')) {
+              if (response && response['follows']) {
+                userList = response['follows'];
+              }
+            }
+
+            while (response.cursor) {
+              if (params.has('cursor')) {
+                params.set('cursor', response.cursor);
+              } else {
+                params.append('cursor', response.cursor);
+              }
+
+              response = await loadUsers(url, params);
+
+              if (url.includes('getFollowers')) {
+                if (response && response['followers']) {
+                  userList = userList.concat(response['followers']);
+                }
+              } else if (url.includes('getFollows')) {
+                if (response && response['follows']) {
+                  userList = userList.concat(response['follows']);
+                }
+              }
+            }
+
+            return userList;
+          }
+
+          async function loadProfile(handle) {
+            const params = new URLSearchParams();
+
+            params.append('actor', handle);
+
+            const response = await fetch('https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?' + params.toString(), {
+              method: 'GET',
+              cache: 'no-store'
+            });
+
+            return await response.json();
+          }
+
+          async function loadUsers(url, params) {
+            const response = await fetch(url + params.toString(), {
+              method: 'GET',
+              cache: 'no-store'
+            });
+
+            return await response.json();
+          }
+
+          function showMessageInBlock(id, message, color) {
+            const block = document.getElementById(id);
+
+            block.textContent = message;
+            block.style.color = color;
+            block.style.display = 'flex';
+
+            setTimeout(function () {
+              block.style.display = 'none';
+              block.textContent = '';
+            }, 3000);
+          }
+        </script>
+    </body>
+</html>
